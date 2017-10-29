@@ -33,9 +33,9 @@ class Type(metaclass=MetaType):
     __slots__ = ()
     _field__data = None
 
-    def __init__(self, **kwargs):
+    def __init__(self, data):
         self._field__data = SimpleNamespace()
-        for key, value in kwargs.items():
+        for key, value in data.items():
             setattr(self, key, value)
 
     def __json__(self):
