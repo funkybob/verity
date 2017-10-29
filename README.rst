@@ -1,6 +1,13 @@
 Verity
 ======
 
+Verity provides Type and field as ways to build classes which will cast and
+validate your incoming data.
+
+Simply declare a sub-class of Type, with fields. Each field takes a callable,
+which is used to validate/cast the incoming data of its name. It can optionally
+also take a default value.
+
 QuickStart
 ----------
 
@@ -30,7 +37,7 @@ Types are nestable:
 
    class Food(Type):
        name = field(str)
-       energy = field(float)
+       energy = field(float, default=0.0)
 
 
    class Person(Type):
@@ -41,7 +48,7 @@ Types are nestable:
 
 .. code-block:: python
 
-   >>> data = {'name': 'Bob', 'birthdate': '1980-12-21', 'favourite_food': {'name': 'Pizza', 'energy': '1200'}}
+   >>> data = {'name': 'Bob', 'birthdate': '1980-12-21', 'favourite_food': {'name': 'Pizza'}}
    >>> person = Person(**data)
    >>> person.favourite_food.name
    'Pizza'
@@ -52,7 +59,7 @@ Types can JSON-ify themselves
 .. code-block:: python
 
    >>> person.__json__()
-   {'name': 'Bob', 'birthdate': datetime.date(1980, 12, 21), 'favourite_food': Food()}
+   {'name': 'Bob', 'birthdate': datetime.date(1980, 12, 21), 'favourite_food': <Food>}
 
 Though it's not recurive.
 
@@ -62,5 +69,5 @@ However, it can cooperate with ``json_default``:
 
    >>> from verity import json
    >>> json.dumps(person)
-   '{"birthdate": "1980-12-21", "favourite_food": {"energy": 1200.0, "name": "Pizza"}, "name": "Bob"}'
+   '{"birthdate": "1980-12-21", "favourite_food": {"energy": 0.0, "name": "Pizza"}, "name": "Bob"}'
 
