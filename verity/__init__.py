@@ -19,17 +19,11 @@ class field:
     def __set__(self, instance, value):
         setattr(instance.__data, self.name, self.caster(value))
 
-
-class MetaType(type):
-    '''Quickly tell the fields their names.'''
-    def __new__(mcs, name, bases, attrs):
-        for name, attr in attrs.items():
-            if isinstance(attr, field):
-                attr.name = name
-        return super().__new__(mcs, name, bases, attrs)
+    def __set_name__(self, instance, name):
+        self.name = name
 
 
-class Type(metaclass=MetaType):
+class Type:
     __slots__ = ()
     _field__data = None
 
